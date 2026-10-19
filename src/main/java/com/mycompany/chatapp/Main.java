@@ -10,50 +10,79 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        Login loginApp = new Login();
 
-        System.out.println("=== USER REGISTRATION ===");
-        
-        // 1. Capture User Details
-        System.out.print("Enter First Name: ");
-        String firstName = input.nextLine();
+        // Display Welcome Header
+        System.out.println("=====================================");
+        System.out.println("       WELCOME TO QUICKCHAT          ");
+        System.out.println("=====================================");
 
-        System.out.print("Enter Last Name: ");
-        String lastName = input.nextLine();
+        System.out.print("How many messages would you wish to send? ");
+        int numberOfMessages = input.nextInt();
+        input.nextLine(); // Clear buffer
 
-        System.out.print("Enter Username: ");
-        String username = input.nextLine();
+        // Outer loop to process the defined number of messages
+        for (int i = 0; i < numberOfMessages; i++) {
+            System.out.println("\n-------------------------------------");
+            System.out.println("Message " + (i + 1) + " of " + numberOfMessages);
+            System.out.println("-------------------------------------");
 
-        System.out.print("Enter Password: ");
-        String password = input.nextLine();
+            String recipient = "";
+            Message tempMessageObj;
 
-        System.out.print("Enter Cell Phone Number (+27...): ");
-        String phone = input.nextLine();
+            // 1. Recipient Cell Number Validation Loop
+            do {
+                System.out.print("Enter recipient cell number (with +27): ");
+                recipient = input.nextLine();
+                tempMessageObj = new Message(i + 1, recipient, "Placeholder");
 
-        // 2. Validate and Register
-        String registrationStatus = loginApp.registerUser(username, password, phone);
-        System.out.println("\n" + registrationStatus);
+                if (!tempMessageObj.checkRecipientCell(recipient)) {
+                    System.out.println("Error: Cell phone number is incorrectly formatted or missing international code. Try again.");
+                }
+            } while (!tempMessageObj.checkRecipientCell(recipient));
 
-        // Only proceed to login if registration was fully successful
-        if (registrationStatus.equals("Username, password, and cell phone number successfully captured.")) {
-            
-            System.out.println("\n=== USER LOGIN ===");
-            System.out.print("Enter Username: ");
-            String loginUser = input.nextLine();
+            String messageText = "";
 
-            System.out.print("Enter Password: ");
-            String loginPass = input.nextLine();
+            // 2. Message Length Validation Loop (Max 250 characters)
+            do {
+                System.out.print("Enter your message (max 250 characters): ");
+                messageText = input.nextLine();
+                tempMessageObj = new Message(i + 1, recipient, messageText);
 
-            // 3. Verify Login Credentials
-            boolean isAuthenticated = loginApp.loginUser(loginUser, loginPass, username, password);
-            
-            // 4. Output Final Login Message
-            String loginMessage = loginApp.returnLoginStatus(isAuthenticated, firstName, lastName);
-            System.out.println("\n" + loginMessage);
-        } else {
-            System.out.println("\nRegistration failed. Please restart and follow the formatting rules.");
+                if (!tempMessageObj.checkMessageLength()) {
+                    System.out.println("Error: Please enter a message of less than 250 characters.");
+                }
+            } while (!tempMessageObj.checkMessageLength());
+
+            // 3. Instantiate Final Message Object
+            Message finalMessage = new Message(i + 1, recipient, messageText);
+
+            System.out.println("\n[Generated Information]");
+            System.out.println("Message ID:   " + finalMessage.getMessageID());
+            System.out.println("Message Hash: " + finalMessage.getMessageHash());
+
+            // 4. Action Menu Prompt
+            System.out.println("\nWhat would you like to do now?");
+            System.out.println("1 - Send message");
+            System.out.println("0 - Disregard message");
+            System.out.println("2 - Store message");
+            System.out.print("Select an option: ");
+
+            int option = input.nextInt();
+            input.nextLine(); // Clear buffer
+
+            if (option == 1) {
+                System.out.println("Status: Message successfully sent!");
+            } else if (option == 0) {
+                System.out.println("Status: Press 0 to delete the message. Message disregarded.");
+            } else if (option == 2) {
+                System.out.println("Status: Message successfully stored!");
+            } else {
+                System.out.println("Invalid option selected.");
+            }
         }
 
-        input.close();
+        System.out.println("\n=====================================");
+        System.out.println("All messages processed successfully.");
+        System.out.println("=====================================");
     }
 }
