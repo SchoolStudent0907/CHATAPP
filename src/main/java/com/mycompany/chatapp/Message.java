@@ -106,6 +106,11 @@ public class Message {
         return allSentMessages.length() > 0 ? allSentMessages.toString() : "No messages sent yet.";
     }
 
+    public static void resetSessionStats() {
+        sentCount = 0;
+        allSentMessages.setLength(0);
+    }
+
     // Getters & Setters
     public String getMessageID() {
         return messageID;

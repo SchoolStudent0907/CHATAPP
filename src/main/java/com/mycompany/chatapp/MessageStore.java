@@ -234,7 +234,7 @@ public class MessageStore {
         return "Message hash not found.";
     }
 
-    // 2f. Display a report listing full details of stored messages (and sent summary)
+    // 2f. Display a report listing full details of stored messages
     public String displayStoredMessagesReport() {
         StringBuilder sb = new StringBuilder();
         sb.append("=== STORED MESSAGES REPORT ===\n");
@@ -252,7 +252,7 @@ public class MessageStore {
         return sb.toString().trim();
     }
 
-    // Helper: combine sent and stored (and disregarded) for ID lookup
+    // Helper: combine sent, stored, and disregarded for ID lookup
     private Message[] allTrackedMessages() {
         Message[] combined = new Message[sentMessages.length + storedMessages.length + disregardedMessages.length];
         int idx = 0;
